@@ -37,7 +37,7 @@ int main(int argc, char* argv [])
     al_register_event_source(queue, al_get_timer_event_source(timer));
 
 #ifdef _DEBUG
-    Debug_ deb;
+    Debug_ *deb = new Debug_();
 #endif
 
     //**********************
@@ -45,7 +45,7 @@ int main(int argc, char* argv [])
 #ifdef _DEBUG
     char ch_test_[33];
     _itoa_s((int) test, ch_test_, 16);
-    deb.log_("Image HEX =", ch_test_);
+    deb->log_("Image HEX =", ch_test_);
 #endif
 
     int x = 320, y = 240;
@@ -84,7 +84,7 @@ int main(int argc, char* argv [])
                             break;
                         default:
 #ifdef _DEBUG
-                            deb.log_("Invalid input", deb.intToStr(ev.keyboard.keycode));
+                            deb->log_("Invalid input", deb->intToStr(ev.keyboard.keycode));
 #endif
                     }
                 }
@@ -106,6 +106,7 @@ int main(int argc, char* argv [])
         }
     }
 
+    delete deb;
     al_destroy_display(display);
     al_destroy_event_queue(queue);
     al_destroy_timer(timer);
