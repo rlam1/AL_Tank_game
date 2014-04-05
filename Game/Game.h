@@ -9,7 +9,7 @@ from private function calls.
 #include <list>
 
 #ifdef _DEBUG
-#include <iostream>
+#include "Debug.h"
 #endif
 
 class Game {

@@ -13,22 +13,23 @@ DEBUG UTILITIES
 
 class Debug_ {
 public:
-    Debug_()
+    Debug_(std::string filename)
     {
-        logfile = std::ofstream("logfile.txt");
-        logfile.clear();
+        filename_ = filename;
+        logfile_ = std::ofstream(filename_);
+        logfile_.clear();
     }
 
     ~Debug_()
     {
-        logfile.close();
+        logfile_.close();
     }
 
     void log_(std::string info, std::string data)
     {
-        std::clog.rdbuf(logfile.rdbuf());
+        std::clog.rdbuf(logfile_.rdbuf());
         std::clog << "LOG: " << info << " " << data << std::endl;
-        std::cout << "To LOG: " << info << " " << data << std::endl;
+        std::cout << "LOG: " << info << " " << data << std::endl;
     }
 
     std::string boolToStr(bool b)
@@ -46,7 +47,8 @@ public:
     }
 
 private:
-    std::ofstream logfile;
+    std::ofstream logfile_;
+    std::string filename_;
 
 };
 #endif // _DEBUG

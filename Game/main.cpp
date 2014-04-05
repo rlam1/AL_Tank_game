@@ -3,6 +3,7 @@
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_native_dialog.h>
+#include <allegro5\joystick.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\keyboard.h>
 #include <string>
@@ -15,10 +16,14 @@
 
 int main(int argc, char* argv [])
 {
+#ifdef _DEBUG
+    Debug_ *deb = new Debug_("logfile.txt");
+#endif
+
     al_init();
-    al_init_image_addon();
     al_init_primitives_addon();
     al_install_keyboard();
+    al_init_image_addon();
 
     ALLEGRO_DISPLAY *display = al_create_display(640, 480);
 
@@ -35,10 +40,6 @@ int main(int argc, char* argv [])
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_timer_event_source(timer));
-
-#ifdef _DEBUG
-    Debug_ *deb = new Debug_();
-#endif
 
     //**********************
     ALLEGRO_BITMAP *test = al_load_bitmap("data/background.png");
@@ -74,19 +75,9 @@ int main(int argc, char* argv [])
                 //************
                 else
                 {
-                    switch (ev.keyboard.keycode)
-                    {
-                        case ALLEGRO_KEY_LEFT:
-                            x--;
-                            break;
-                        case ALLEGRO_KEY_RIGHT:
-                            x++;
-                            break;
-                        default:
 #ifdef _DEBUG
-                            deb->log_("Invalid input", deb->intToStr(ev.keyboard.keycode));
+                    deb->log_("Invalid input", deb->intToStr(ev.keyboard.keycode));
 #endif
-                    }
                 }
                 //************
                 break;
