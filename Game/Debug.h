@@ -5,7 +5,6 @@ DEBUG UTILITIES
 ****************************************/
 
 #pragma once
-#ifdef _DEBUG
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -18,6 +17,17 @@ public:
         filename_ = filename;
         logfile_ = std::ofstream(filename_);
         logfile_.clear();
+
+        writeToCout = true;
+    }
+
+    Debug_(std::string filename, bool sendToCout)
+    {
+        filename_ = filename;
+        logfile_ = std::ofstream(filename_);
+        logfile_.clear();
+
+        writeToCout = sendToCout;
     }
 
     ~Debug_()
@@ -29,7 +39,11 @@ public:
     {
         std::clog.rdbuf(logfile_.rdbuf());
         std::clog << "LOG: " << info << " " << data << std::endl;
-        std::cout << "LOG: " << info << " " << data << std::endl;
+
+        if (writeToCout)
+        {
+            std::cout << "LOG: " << info << " " << data << std::endl;
+        }
     }
 
     std::string boolToStr(bool b)
@@ -46,9 +60,14 @@ public:
         return stest;
     }
 
+    int strToInt(std::string sVal)
+    {
+        return atoi(sVal.c_str());
+    }
+
 private:
     std::ofstream logfile_;
     std::string filename_;
 
+    bool writeToCout;
 };
-#endif // _DEBUG

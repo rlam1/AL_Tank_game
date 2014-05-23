@@ -8,21 +8,25 @@ from private function calls.
 
 #include <list>
 
-#ifdef _DEBUG
+#include "Input.h"
 #include "Debug.h"
-#endif
+
+class Input;
+class Debug_;
 
 class Game {
 public:
-    Game()
-    {
-    }
+    Game(Debug_ *deb);
 
     ~Game()
     {
     }
 
-private:
+    void update();
+    void procInput(bool val, int key);
 
+private:
+    Input *inputMan;
+    Debug_ *deb;
 };
 

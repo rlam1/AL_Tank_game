@@ -9,16 +9,19 @@
 #include <string>
 
 #include "Game.h"
+#include "Input.h"
 
-#ifdef _DEBUG
+#include "Gwen/Gwen.h"
+#include "Gwen/Skins/Simple.h"
+#include "Gwen/Skins/TexturedBase.h"
+#include "Gwen/Input/Allegro.h"
+#include "Gwen/Renderers/Allegro.h"
+
 #include "Debug.h"
-#endif
 
 int main(int argc, char* argv [])
 {
-#ifdef _DEBUG
     Debug_ *deb = new Debug_("logfile.txt");
-#endif
 
     al_init();
     al_init_primitives_addon();
@@ -43,13 +46,13 @@ int main(int argc, char* argv [])
 
     //**********************
     ALLEGRO_BITMAP *test = al_load_bitmap("data/background.png");
-#ifdef _DEBUG
     char ch_test_[33];
     _itoa_s((int) test, ch_test_, 16);
     deb->log_("Image HEX =", ch_test_);
-#endif
 
     int x = 320, y = 240;
+
+    Game *game = new Game(deb);
     //*********************
 
     al_start_timer(timer);
@@ -63,6 +66,7 @@ int main(int argc, char* argv [])
         {
             case ALLEGRO_EVENT_TIMER:
                 redraw = true;
+                game->update();
                 break;
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -72,14 +76,13 @@ int main(int argc, char* argv [])
                 {
                     done = true;
                 }
-                //************
                 else
                 {
-#ifdef _DEBUG
-                    deb->log_("Invalid input", deb->intToStr(ev.keyboard.keycode));
-#endif
+                    game->procInput(true, ev.keyboard.keycode);
                 }
-                //************
+                break;
+            case ALLEGRO_EVENT_KEY_UP:
+                game->procInput(false, ev.keyboard.keycode);
                 break;
             default:
                 break;
