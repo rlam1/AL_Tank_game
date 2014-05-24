@@ -6,6 +6,7 @@
 #include <allegro5\joystick.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\keyboard.h>
+#include <allegro5\mouse.h>
 #include <string>
 
 #include "Game.h"
@@ -16,6 +17,8 @@
 #include "Gwen/Skins/TexturedBase.h"
 #include "Gwen/Input/Allegro.h"
 #include "Gwen/Renderers/Allegro.h"
+#include "Gwen/Controls.h"
+#include "Gwen\Events.h"
 
 #include "Debug.h"
 
@@ -27,6 +30,9 @@ int main(int argc, char* argv [])
     al_init_primitives_addon();
     al_install_keyboard();
     al_init_image_addon();
+    al_init_font_addon();
+    al_init_ttf_addon();
+    al_install_mouse();
 
     ALLEGRO_DISPLAY *display = al_create_display(640, 480);
 
@@ -43,8 +49,35 @@ int main(int argc, char* argv [])
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_timer_event_source(timer));
+    al_register_event_source(queue, al_get_mouse_event_source());
 
     //**********************
+    // Allegro Renderer
+    Gwen::Renderer::Allegro *pRenderer = new Gwen::Renderer::Allegro();
+
+    // SKin used for windows
+    Gwen::Skin::TexturedBase skin(pRenderer);
+    skin.SetRender(pRenderer);
+    skin.Init("data/tilesets/DefaultSkin.png");
+    skin.SetDefaultFont("data/fonts/OpenSans.ttf", 11);
+
+    // MAke a canvas, other panels of GWEN draw to it ONLY
+    Gwen::Controls::Canvas *pCanvas = new Gwen::Controls::Canvas(&skin);
+    pCanvas->SetSize(640, 480);
+    pCanvas->SetDrawBackground(true);
+    pCanvas->SetBackgroundColor(Gwen::Color(150, 170, 170, 255));
+
+    // Helper that processes Windows MSG's and fires input at GWEN
+    Gwen::Input::Allegro GwenInput;
+    GwenInput.Initialize(pCanvas);
+
+    Gwen::Controls::Button *button1 = new Gwen::Controls::Button(pCanvas, "Button1");
+    button1->SetPos(0, 0);
+    button1->SetText("This is my first button!");
+    button1->SizeToContents();
+    button1->SetMouseInputEnabled(true);
+
+
     ALLEGRO_BITMAP *test = al_load_bitmap("data/background.png");
     char ch_test_[33];
     _itoa_s((int) test, ch_test_, 16);
@@ -61,6 +94,8 @@ int main(int argc, char* argv [])
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(queue, &ev);
+
+        GwenInput.ProcessMessage(ev);
 
         switch (ev.type)
         {
@@ -93,7 +128,7 @@ int main(int argc, char* argv [])
             redraw = false;
 
             al_clear_to_color(al_map_rgb(0, 0, 0));
-            al_draw_bitmap(test, 0, 0, NULL);
+            pCanvas->RenderCanvas();
 
             al_draw_filled_circle(x, 240, 89, al_map_rgb(255, 0, 255));
             al_flip_display();
