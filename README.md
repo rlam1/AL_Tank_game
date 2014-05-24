@@ -16,7 +16,7 @@ What I am doing right now?
 
   * Finding good foundation libraries so I dont reinvent the wheel again.
   * Sketching Core game systems and interactions between libraries.
-  * Investigating a little about AI and game implementations of it (very ##VERY## tedious)
+  * Investigating a little about AI and game implementations of it (very **VERY** tedious)
   * Enyoing a good read of [game programming patterns](http://www.gameprogrammingpatterns.com).
   * Testing colors and styles so THEN start doing some artwork.
   * Having a life apart of this...
