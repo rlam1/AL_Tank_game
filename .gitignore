@@ -154,3 +154,8 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+Game/logfile.txt
+*.lib
+*.dll
+*.exp
+Game/keyState.txt
