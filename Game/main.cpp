@@ -6,26 +6,53 @@
 #include <allegro5\joystick.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\keyboard.h>
+#include <allegro5\config.h>
+
+#include "ComponentManager.h"
+#include "PhysicsComponent.h"
+
 #include <string>
-
-#include "Game.h"
-
-#ifdef _DEBUG
-#include "Debug.h"
-#endif
+#include <list>
+#include <algorithm>
 
 int main(int argc, char* argv [])
 {
-#ifdef _DEBUG
-    Debug_ *deb = new Debug_("logfile.txt");
-#endif
-
     al_init();
     al_init_primitives_addon();
     al_install_keyboard();
     al_init_image_addon();
 
-    ALLEGRO_DISPLAY *display = al_create_display(640, 480);
+	ALLEGRO_CONFIG *configFile = al_load_config_file("data/config/config.ini");
+	if (configFile == NULL)
+	{
+		al_show_native_message_box(NULL, "A fatal error has ocurred!",
+			"The configuration file has not been found!", 
+			"Be sure to always have a valid conf.ini in /data/config/ for the program to work...", "Understood", ALLEGRO_MESSAGEBOX_ERROR);
+		return 0;
+	}
+
+	const char *dispW = al_get_config_value(configFile, "DISPLAY", "RESX");
+	const char *dispH = al_get_config_value(configFile, "DISPLAY", "RESY");
+	const char *fullscreenMode = al_get_config_value(configFile, "DISPLAY", "FULLSCREEN");
+
+	int iDispW = atoi(dispW);
+	int iDispH = atoi(dispH);
+	bool bfullscreenMode = atoi(fullscreenMode);
+
+	assert(iDispW < 5000 && iDispW > 0);
+	assert(iDispH < 5000 && iDispH > 0);
+
+	if (bfullscreenMode == true)
+		al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+
+	ALLEGRO_DISPLAY *display = al_create_display(atoi(dispW), atoi(dispH));
+	if (display == NULL)
+	{
+		al_show_native_message_box(NULL, "A fatal error has ocurred!",
+			"Display creation failed!",
+			"The resolution selected is not supported by your screen/video card...", "Understood", ALLEGRO_MESSAGEBOX_ERROR);
+		return 0;
+	}
 
     al_clear_to_color(al_map_rgb(255, 0, 0));
     al_flip_display();
@@ -43,16 +70,15 @@ int main(int argc, char* argv [])
 
     //**********************
     ALLEGRO_BITMAP *test = al_load_bitmap("data/background.png");
-#ifdef _DEBUG
-    char ch_test_[33];
-    _itoa_s((int) test, ch_test_, 16);
-    deb->log_("Image HEX =", ch_test_);
-#endif
 
     int x = 320, y = 240;
+
+	ComponentManager newManager;
     //*********************
 
     al_start_timer(timer);
+
+	newManager.AddComponent(new PhysicsComponent(Vec2D(), Vec2D(), Vec2D(5.0f, 10.0f), false));
 
     while (!done)
     {
@@ -62,6 +88,7 @@ int main(int argc, char* argv [])
         switch (ev.type)
         {
             case ALLEGRO_EVENT_TIMER:
+				newManager.Update();
                 redraw = true;
                 break;
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -75,9 +102,7 @@ int main(int argc, char* argv [])
                 //************
                 else
                 {
-#ifdef _DEBUG
-                    deb->log_("Invalid input", deb->intToStr(ev.keyboard.keycode));
-#endif
+					// NOTHING
                 }
                 //************
                 break;
@@ -92,12 +117,15 @@ int main(int argc, char* argv [])
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(test, 0, 0, NULL);
 
-            al_draw_filled_circle(x, 240, 89, al_map_rgb(255, 0, 255));
+			PhysicsComponent *test = (PhysicsComponent*) newManager.GetComponentByType(COMP_PHYSICS);
+			Vec2D pos = test->GetPosition();
+
+            al_draw_filled_circle(pos.x, pos.y, 89, al_map_rgb(255, 0, 255));
             al_flip_display();
         }
     }
 
-    delete deb;
+	al_destroy_config(configFile);
     al_destroy_display(display);
     al_destroy_event_queue(queue);
     al_destroy_timer(timer);
