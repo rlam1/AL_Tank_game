@@ -1,6 +1,7 @@
 #pragma once
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_color.h>
 #include <allegro5\allegro_primitives.h>
 
 #include <string>
@@ -10,18 +11,21 @@
 class Sprite {
 public:
 	Sprite(std::string resLocation);
+	Sprite(Vec2D size);
+	Sprite();
 	virtual ~Sprite();
 
-	void ReloadImage();
+	void SetImagePath(std::string resLocation);
 	Vec2D GetSize();
 	ALLEGRO_BITMAP* GetSprite();
 private:
 	ALLEGRO_BITMAP* sourceImage;
 	Vec2D size;
 	bool isImageLoaded;
+	bool isErrorImageLoaded;
 	std::string pathToImage;
 
 	bool LoadImageFile();
-	void GenErrorImage();
+	bool GenErrorImage();
 };
 
