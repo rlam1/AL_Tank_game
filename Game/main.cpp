@@ -8,8 +8,10 @@
 #include <allegro5\keyboard.h>
 #include <allegro5\config.h>
 
-#include "ComponentManager.h"
+#include "TestObject.h"
 #include "PhysicsComponent.h"
+#include "RenderComponent.h"
+#include "Sprite.h"
 
 #include <string>
 #include <list>
@@ -73,12 +75,17 @@ int main(int argc, char* argv [])
 
     int x = 320, y = 240;
 
-	ComponentManager newManager;
+	Vec2D size(40.0f, 40.0f);
+
+	TestObject gameObject(Vec2D(10.0f, 10.0f));
+	gameObject.AddComponent(new RenderComponent());
+
+	Sprite testSprite = Sprite(size);
     //*********************
 
     al_start_timer(timer);
 
-	newManager.AddComponent(new PhysicsComponent(Vec2D(), Vec2D(), Vec2D(5.0f, 10.0f), false));
+	//newManager.AddComponent(new PhysicsComponent(Vec2D(), Vec2D(), Vec2D(5.0f, 10.0f), false));
 
     while (!done)
     {
@@ -88,7 +95,6 @@ int main(int argc, char* argv [])
         switch (ev.type)
         {
             case ALLEGRO_EVENT_TIMER:
-				newManager.Update();
                 redraw = true;
                 break;
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -117,10 +123,12 @@ int main(int argc, char* argv [])
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(test, 0, 0, NULL);
 
-			PhysicsComponent *test = (PhysicsComponent*) newManager.GetComponentByType(COMP_PHYSICS);
-			Vec2D pos = test->GetPosition();
+			//PhysicsComponent *test = (PhysicsComponent*) newManager.GetComponentByType(COMP_PHYSICS);
+			//Vec2D pos = test->GetPosition();
 
-            al_draw_filled_circle(pos.x, pos.y, 89, al_map_rgb(255, 0, 255));
+            al_draw_filled_circle(x, y, 89, al_map_rgb(255, 0, 255));
+
+			al_draw_bitmap(testSprite.GetSprite(), 30, 30, NULL);
             al_flip_display();
         }
     }

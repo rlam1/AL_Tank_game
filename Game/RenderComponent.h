@@ -1,6 +1,5 @@
 #pragma once
 #include "ComponentBase.h"
-
 #include "Sprite.h"
 
 class RenderComponent :

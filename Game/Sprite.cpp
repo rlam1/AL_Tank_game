@@ -19,7 +19,7 @@ Sprite::Sprite(std::string resLocation)
 
 Sprite::Sprite(Vec2D size)
 {
-	pathToImage = nullptr;
+	pathToImage = "";
 	sourceImage = nullptr;
 	isImageLoaded = false;
 	this->size = size;
@@ -29,7 +29,7 @@ Sprite::Sprite(Vec2D size)
 
 Sprite::Sprite()
 {
-	pathToImage = nullptr;
+	pathToImage = "";
 	sourceImage = nullptr;
 	isImageLoaded = false;
 	size.x = 30;

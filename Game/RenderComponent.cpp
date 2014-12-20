@@ -3,6 +3,8 @@
 
 RenderComponent::RenderComponent()
 {
+	renderObject = Sprite();
+	renderSize = renderObject.GetSize();
 }
 
 
