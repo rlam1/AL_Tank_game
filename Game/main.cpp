@@ -33,13 +33,13 @@ int main(int argc, char* argv [])
 		return 0;
 	}
 
-	const char *dispW = al_get_config_value(configFile, "DISPLAY", "RESX");
-	const char *dispH = al_get_config_value(configFile, "DISPLAY", "RESY");
-	const char *fullscreenMode = al_get_config_value(configFile, "DISPLAY", "FULLSCREEN");
+	std::string dispW = al_get_config_value(configFile, "DISPLAY", "RESX");
+	std::string dispH = al_get_config_value(configFile, "DISPLAY", "RESY");
+	std::string fullscreenMode = al_get_config_value(configFile, "DISPLAY", "FULLSCREEN");
 
-	int iDispW = atoi(dispW);
-	int iDispH = atoi(dispH);
-	bool bfullscreenMode = atoi(fullscreenMode);
+	int iDispW = stoi(dispW);
+	int iDispH = stoi(dispH);
+	bool bfullscreenMode = stoi(fullscreenMode);
 
 	assert(iDispW < 5000 && iDispW > 0);
 	assert(iDispH < 5000 && iDispH > 0);
@@ -47,7 +47,7 @@ int main(int argc, char* argv [])
 	if (bfullscreenMode == true)
 		al_set_new_display_flags(ALLEGRO_FULLSCREEN);
 
-	ALLEGRO_DISPLAY *display = al_create_display(atoi(dispW), atoi(dispH));
+	ALLEGRO_DISPLAY *display = al_create_display(iDispW, iDispH);
 	if (display == NULL)
 	{
 		al_show_native_message_box(NULL, "A fatal error has ocurred!",
