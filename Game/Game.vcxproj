@@ -107,6 +107,9 @@
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="Vec.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\config\config.ini" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

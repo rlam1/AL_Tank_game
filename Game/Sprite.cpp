@@ -83,7 +83,10 @@ Vec2D Sprite::GetSize()
 
 ALLEGRO_BITMAP* Sprite::GetSprite()
 {
-	return sourceImage;
+    if (isImageLoaded || isErrorImageLoaded)
+        return sourceImage;
+    else
+        return nullptr;
 }
 
 
@@ -104,7 +107,7 @@ bool Sprite::GenErrorImage()
 {
 	sourceImage = al_create_bitmap((int) size.x, (int) size.y);
 
-	if (sourceImage == NULL)
+	if (sourceImage == nullptr)
 		return false;
 
 	ALLEGRO_COLOR background = al_color_html("#3f51b5");

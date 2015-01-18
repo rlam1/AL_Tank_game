@@ -3,7 +3,8 @@
 class TestObject :
 	public Object {
 public:
-	TestObject(Vec2D position) : Object(position) {} ;
+	TestObject(Vec2D position) 
+        : Object(position) {} ;
 	~TestObject();
 };
 

@@ -15,6 +15,7 @@ RenderComponent::~RenderComponent()
 
 void RenderComponent::Update()
 {
+    al_draw_bitmap(renderObject.GetSprite(), position.x, position.y, NULL);
 }
 
 

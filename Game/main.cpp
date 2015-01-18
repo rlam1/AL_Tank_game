@@ -17,6 +17,21 @@
 #include <list>
 #include <algorithm>
 
+// Taken from http://stackoverflow.com/questions/1640720/how-do-i-tell-if-the-c-function-atoi-failed-or-if-it-was-a-string-of-zeros
+//template< typename T >
+//inline T convert(const std::string& str)
+//{
+//    std::istringstream iss(str);
+//    T obj;
+//
+//    iss >> std::ws >> obj >> std::ws;
+//
+//    if (!iss.eof())
+//        throw "dammit!";
+//
+//    return obj;
+//}
+
 int main(int argc, char* argv [])
 {
     al_init();
@@ -79,8 +94,7 @@ int main(int argc, char* argv [])
 
 	TestObject gameObject(Vec2D(10.0f, 10.0f));
 	gameObject.AddComponent(new RenderComponent());
-
-	Sprite testSprite = Sprite(size);
+    gameObject.AddComponent(new PhysicsComponent(size, size, size, true));
     //*********************
 
     al_start_timer(timer);
@@ -96,6 +110,7 @@ int main(int argc, char* argv [])
         {
             case ALLEGRO_EVENT_TIMER:
                 redraw = true;
+                gameObject.Update();
                 break;
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -128,7 +143,6 @@ int main(int argc, char* argv [])
 
             al_draw_filled_circle(x, y, 89, al_map_rgb(255, 0, 255));
 
-			al_draw_bitmap(testSprite.GetSprite(), 30, 30, NULL);
             al_flip_display();
         }
     }
